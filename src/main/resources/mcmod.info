@@ -1,0 +1,16 @@
+[
+{
+  "modid": "lowhptint",
+  "name": "isXander's LowHpTint Mod",
+  "description": "A continuation of aycy's LowHpTint",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["isXander"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
