@@ -29,12 +29,16 @@ public class LowHpTint {
     public static final String MODID = "lowhptint";
     public static final String VERSION = "1.0";
 
+    private static final ResourceLocation vignette = new ResourceLocation("lowhptint/tintshape.png");
+
     @Mod.Instance
     private static LowHpTint instance;
-
     private LowHpTintConfig config;
-
     private GuiHandler guiHandler;
+
+    private float prevRed = 1;
+    private float prevGreen = 1;
+    private float prevBlue = 1;
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
@@ -60,13 +64,12 @@ public class LowHpTint {
     @SubscribeEvent
     public void onRenderHealth(RenderGameOverlayEvent.Post event) {
         if (event.type == RenderGameOverlayEvent.ElementType.FOOD) {
-            renderTint(Minecraft.getMinecraft().thePlayer.getHealth(), new ScaledResolution(Minecraft.getMinecraft()));
+            if (config.isEnabled())
+                renderTint(Minecraft.getMinecraft().thePlayer.getHealth(), new ScaledResolution(Minecraft.getMinecraft()), event.partialTicks);
         }
     }
 
-    private static final ResourceLocation vignette = new ResourceLocation("lowhptint/tintshape.png");
-
-    private void renderTint(float currentHealth, ScaledResolution res) {
+    private void renderTint(float currentHealth, ScaledResolution res, float partialTicks) {
         float threshold = config.getHealth();
         if (currentHealth <= threshold) {
             GlStateManager.pushMatrix();
@@ -75,10 +78,10 @@ public class LowHpTint {
             GlStateManager.depthMask(false);
             GlStateManager.tryBlendFuncSeparate(0, 769, 1, 0);
             float f = (threshold - currentHealth) / threshold + 1.0F / threshold * 2.0F;
-            float r = 1.0f - MathUtils.lerp(MathUtils.getPercent(config.getRed(),   0, 255), 0.0f, f);
-            float g = 1.0f - MathUtils.lerp(MathUtils.getPercent(config.getGreen(), 0, 255), 0.0f, f);
-            float b = 1.0f - MathUtils.lerp(MathUtils.getPercent(config.getBlue(),  0, 255), 0.0f, f);
-            GlStateManager.color(r, g, b, 1.0f);
+            float r = prevRed   = MathUtils.lerp(prevRed,   MathUtils.lerp(MathUtils.getPercent(config.getRed(),   0, 255), 0.0f, f), partialTicks * (config.getSpeed() / 100f));
+            float g = prevGreen = MathUtils.lerp(prevGreen, MathUtils.lerp(MathUtils.getPercent(config.getGreen(), 0, 255), 0.0f, f), partialTicks * (config.getSpeed() / 100f));
+            float b = prevBlue  = MathUtils.lerp(prevBlue,  MathUtils.lerp(MathUtils.getPercent(config.getBlue(),  0, 255), 0.0f, f), partialTicks * (config.getSpeed() / 100f));
+            GlStateManager.color(1.0f - r, 1.0f - g, 1.0f - b, 1.0f);
             Minecraft.getMinecraft().getTextureManager().bindTexture(vignette);
             Tessellator tes = Tessellator.getInstance();
             WorldRenderer wr = tes.getWorldRenderer();
