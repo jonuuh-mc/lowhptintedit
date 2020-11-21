@@ -1,2 +1,2 @@
-# lowhptint
-A continuation of aycy's lowhptint mod.
+# WHERE TO DOWNLOAD
+Download the file (f)[here]
