@@ -13,7 +13,6 @@ public class LowHpTintConfig {
     private int r;
     private int g;
     private int b;
-    private int a;
 
     public void load() {
         this.config.load();
@@ -21,7 +20,6 @@ public class LowHpTintConfig {
         r = config.get("client", "red", 200).getInt();
         g = config.get("client", "green", 0).getInt();
         b = config.get("client", "blue", 0).getInt();
-        a = config.get("client", "alpha", 255).getInt();
         if (config.hasChanged())
             config.save();
     }
@@ -31,7 +29,6 @@ public class LowHpTintConfig {
         config.get("client", "red", 200).set(r);
         config.get("client", "green", 0).set(g);
         config.get("client", "blue", 0).set(b);
-        config.get("client", "alpha", 255).set(a);
         if (config.hasChanged())
             config.save();
     }
@@ -66,14 +63,6 @@ public class LowHpTintConfig {
 
     public void setBlue(int b) {
         this.b = b;
-    }
-
-    public int getAlpha() {
-        return a;
-    }
-
-    public void setAlpha(int a) {
-        this.a = a;
     }
 
 }

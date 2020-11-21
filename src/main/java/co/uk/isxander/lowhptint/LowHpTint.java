@@ -4,12 +4,14 @@ import co.uk.isxander.lowhptint.command.LowHpTintCommand;
 import co.uk.isxander.lowhptint.config.LowHpTintConfig;
 import co.uk.isxander.lowhptint.gui.GuiHandler;
 import co.uk.isxander.lowhptint.gui.impl.GuiLowHpTint;
+import co.uk.isxander.lowhptint.utils.MathUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -58,7 +60,7 @@ public class LowHpTint {
     @SubscribeEvent
     public void onRenderHealth(RenderGameOverlayEvent.Post event) {
         if (event.type == RenderGameOverlayEvent.ElementType.FOOD) {
-            renderTint(getHealth(), new ScaledResolution(Minecraft.getMinecraft()));
+            renderTint(Minecraft.getMinecraft().thePlayer.getHealth(), new ScaledResolution(Minecraft.getMinecraft()));
         }
     }
 
@@ -67,13 +69,16 @@ public class LowHpTint {
     private void renderTint(float currentHealth, ScaledResolution res) {
         float threshold = config.getHealth();
         if (currentHealth <= threshold) {
-            float f = (threshold - currentHealth) / threshold + 1.0F / threshold * 2.0F;
             GlStateManager.pushMatrix();
             GlStateManager.enableBlend();
             GlStateManager.disableDepth();
             GlStateManager.depthMask(false);
             GlStateManager.tryBlendFuncSeparate(0, 769, 1, 0);
-            GlStateManager.color(0.0f, f, f, 1.0f);
+            float f = (threshold - currentHealth) / threshold + 1.0F / threshold * 2.0F;
+            float r = 1.0f - MathUtils.lerp(MathUtils.getPercent(config.getRed(),   0, 255), 0.0f, f);
+            float g = 1.0f - MathUtils.lerp(MathUtils.getPercent(config.getGreen(), 0, 255), 0.0f, f);
+            float b = 1.0f - MathUtils.lerp(MathUtils.getPercent(config.getBlue(),  0, 255), 0.0f, f);
+            GlStateManager.color(r, g, b, 1.0f);
             Minecraft.getMinecraft().getTextureManager().bindTexture(vignette);
             Tessellator tes = Tessellator.getInstance();
             WorldRenderer wr = tes.getWorldRenderer();
@@ -91,14 +96,6 @@ public class LowHpTint {
             GlStateManager.popMatrix();
         }
 
-    }
-
-    private float getHealth() {
-        return (Minecraft.getMinecraft().currentScreen instanceof GuiLowHpTint ? 1 : Minecraft.getMinecraft().thePlayer.getHealth());
-    }
-
-    private float getPercent(float val, float min, float max) {
-        return (val - min) / (max - min);
     }
 
 }
