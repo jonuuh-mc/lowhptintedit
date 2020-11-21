@@ -27,7 +27,7 @@ public class LowHpTint {
 
     public static final String NAME = "isXander's LowHpTint Mod";
     public static final String MODID = "lowhptint";
-    public static final String VERSION = "1.0";
+    public static final String VERSION = "1.1";
 
     private static final ResourceLocation vignette = new ResourceLocation("lowhptint/tintshape.png");
 
