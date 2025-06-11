@@ -1,38 +1,49 @@
 package co.uk.isxander.lowhptint.utils;
 
-public class MathUtils {
-
-    /**
-     * Clamps value between 0 and 1 and returns value.
-     */
-    public static float clamp01(float value) {
-        if ((double)value < 0.0)
-            return 0.0f;
-        return (double)value > 1.0 ? 1f : value;
+public final class MathUtils
+{
+    public static float normalize(float val, float min, float max)
+    {
+        return (clamp(val, min, max) - min) / (max - min);
     }
 
-    /**
-     * Linearly interpolates between a and b by t.
-     *
-     * @param a Start value
-     * @param b End value
-     * @param t Interpolation between two floats
-     * @return interpolated value between a - b
-     */
-    public static float lerp(float a, float b, float t) {
-        return a + (b - a) * MathUtils.clamp01(t);
+    public static float clamp(double value, double min, double max)
+    {
+        return (float) Math.min((Math.max(value, min)), max);
     }
 
-    /**
-     * Returns number between 0 - 1 depending on the range and value given
-     *
-     * @param val the value
-     * @param min minimum of what the value can be
-     * @param max maximum of what the value can be
-     * @return converted percentage
-     */
-    public static float getPercent(float val, float min, float max) {
-        return (val - min) / (max - min);
+    public static double ease(int type, float scale, double x)
+    {
+        if (type == 1)
+        {
+            return easeIn(scale, x);
+        }
+        else if (type == 2)
+        {
+            return easeOut(scale, x);
+        }
+        else if (type == 3)
+        {
+            return easeInOut(scale, x);
+        }
+        return x;
     }
 
+    private static double easeIn(float scale, double x)
+    {
+        return Math.pow(x, scale);
+    }
+
+    private static double easeOut(float scale, double x)
+    {
+        return 1 - Math.pow(1 - x, scale);
+    }
+
+    private static double easeInOut(float scale, double x)
+    {
+        double firstHalf = (0.5F / Math.pow(0.5, scale)) * Math.pow(x, scale);
+        double secondHalf = 1 - (Math.pow(-2 * x + 2, scale) / 2);
+
+        return (x < 0.5) ? firstHalf : secondHalf;
+    }
 }

@@ -1,13 +1,13 @@
 [
 {
   "modid": "lowhptint",
-  "name": "isXander's LowHpTint Mod",
-  "description": "A continuation of aycy's LowHpTint",
+  "name": "LowHpTint",
+  "description": "A continuation of isXander's aycy's LowHpTint",
   "version": "${version}",
   "mcversion": "${mcversion}",
-  "url": "",
+  "url": "https://github.com/jonuuh-mc/lowhptint",
   "updateUrl": "",
-  "authorList": ["isXander"],
+  "authorList": ["A lot of people"],
   "credits": "",
   "logoFile": "",
   "screenshots": [],
